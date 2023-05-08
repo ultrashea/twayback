@@ -74,6 +74,8 @@ parser.add_argument('-u', '--username', required=True, default='')
 parser.add_argument('-from', '--fromdate', required=False, default='')
 parser.add_argument('-to', '--todate', required=False, default='')
 parser.add_argument('--batch-size', type=int, required=False, default=300, help="How many urls to examine at once.")
+# Add optional argument to identify maximum batch size if throttling
+# Add optional argument for pause duration when throttling
 parser.add_argument('--semaphore-size', type=int, required=False, default=50, help="How many urls(from --batch-size) to query at once. Between 1 and 50")
 parser.add_argument('--proxy-file', required=False, default='', help="A list of proxies the script will rotate through")
 args = vars(parser.parse_args())
@@ -146,6 +148,7 @@ else:
 results_list = []
 counter = 0
 for x in tqdm(range(0, len(twitter_url_list))):
+# add code for batch size/pausing for throttling
     if counter==batch_size or x == len(twitter_url_list)-1 :
         results_list.extend(asyncio.run(asyncStarter(twitter_url_list[x-batch_size:x], semaphore_size, proxy_list)))
         counter = 0
